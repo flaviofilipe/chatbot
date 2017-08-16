@@ -14,6 +14,12 @@ class Chatbot(object):
 		self.conhecidos = json.load(memoria) #Carrega o arquivo memoria e armazena na lista de conhecidos
 		memoria.close()
 		self.historico = [ ]
+
+		#Dicionario de frases
+		self.frases = {
+		'oi': 'Olá, qual o seu nome?',
+		'tchau':'tchau'
+		} 
 	
 	def escuta(self):
 		frase = input ('>:')
@@ -22,19 +28,25 @@ class Chatbot(object):
 		return frase
 
 	def pensa(self, frase):
-		if frase == 'oi':
-			return 'Olá, qual o seu nome?'
-		elif frase == 'tchau':
-			return 'tchau';
+		#Pesquisar frase no dicionario
+		if frase in self.frases:
+			return self.frases[frase]
+		if frase == 'aprende':
+			chave 	= input('Digite a frase: ')
+			resp 	= input('Digite a resposta: ')
+			self.frases[chave] = resp
+			return 'Aprendido'
 
 		if self.historico[-1] == 'Olá, qual o seu nome?': #Verifica ultima frase do historico
 			nome = self.pegaNome(frase)
 			resp = self.respondeNome(nome)
 			return resp
 
-		if self.historico[0] == '':
-			return 'Diga oi primeiro mal educado!'
-
+		try:
+			resp = eval(frase)
+			return resp
+		except:
+			pass
 		return 'Não Entendi'
 
 	def pegaNome(self, nome):
